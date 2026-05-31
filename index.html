@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Galeri Media & Musik Santai | Rasio Asli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f8f9fc 0%, #eef2f7 100%);
+            color: #1a2634;
+            line-height: 1.5;
+        }
+
+        /* header */
+        header {
+            background: linear-gradient(135deg, #1e2a3a, #0f1722);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-bottom-left-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            letter-spacing: -0.5px;
+            font-weight: 700;
+            background: linear-gradient(to right, #f9f3d9, #ffe6b3);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        /* container utama */
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* section gallery */
+        .gallery-section {
+            margin-bottom: 3rem;
+        }
+
+        .gallery-section h2 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            border-left: 6px solid #f97316;
+            padding-left: 1rem;
+            margin-bottom: 1.8rem;
+            color: #0f172a;
+            letter-spacing: -0.3px;
+        }
+
+        /* grid responsive */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* card style */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(0px);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+            transition: transform 0.25s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        /* == FOTO & VIDEO: UKURAN SESUAI ASLI / TANPA CROP == */
+        .card img {
+            width: 100%;
+            height: auto;          /* otomatis mengikuti rasio asli gambar */
+            display: block;
+            background-color: #eef2f5;
+            transition: transform 0.3s ease;
+        }
+
+        .card video {
+            width: 100%;
+            height: auto;          /* tinggi menyesuaikan proporsi video asli */
+            display: block;
+            background-color: #0f1722;
+            outline: none;
+            transition: transform 0.3s ease;
+        }
+
+        /* efek hover halus tanpa merusak rasio */
+        .card:hover img,
+        .card:hover video {
+            transform: scale(1.01);
+        }
+
+        .card p {
+            padding: 1rem 1rem 1.2rem;
+            font-weight: 500;
+            text-align: center;
+            background: white;
+            font-size: 0.95rem;
+            color: #2c3e4f;
+            border-top: 1px solid #f0f2f5;
+            margin: 0;
+        }
+
+        /* kontainer untuk iframe jika dibutuhkan (tapi di kode ini kita gunakan video asli) */
+        /* tetap disiapkan untuk fleksibilitas, tanpa paksaan rasio tetap */
+        .video-embed-wrapper {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+
+        .video-embed-wrapper iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;  /* menjaga rasio embed, tapi tetap tidak memotong isi */
+            display: block;
+            border: 0;
+        }
+
+        /* MUSIC PLAYER SECTION - KHUSUS */
+        .music-section {
+            margin: 2.8rem 0 2rem;
+        }
+
+        .music-card {
+            background: linear-gradient(125deg, #ffffff 0%, #fef9e8 100%);
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            transition: all 0.2s;
+        }
+
+        .music-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px dashed #fbd38d;
+            padding-bottom: 0.8rem;
+        }
+
+        .music-header h3 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(115deg, #d9480f, #f97316);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .music-icon {
+            font-size: 2.2rem;
+            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1));
+        }
+
+        .music-player-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        audio {
+            width: 100%;
+            border-radius: 60px;
+            background: #f1f5f9;
+            outline: none;
+            height: 54px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background-color: #fff6e5;
+        }
+
+        .music-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            color: #4a4a4a;
+            background: #fef7e0;
+            padding: 0.6rem 1rem;
+            border-radius: 80px;
+        }
+
+        .track-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .track-name span:first-child {
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            background: #f97316;
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            text-align: right;
+            opacity: 0.7;
+            margin-top: 0.8rem;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, #e2e8f0, #f97316, #e2e8f0);
+            opacity: 0.5;
+        }
+
+        footer {
+            background: #0f1722;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top-left-radius: 2rem;
+            border-top-right-radius: 2rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+            .music-card {
+                padding: 1.2rem;
+            }
+            .music-header h3 {
+                font-size: 1.3rem;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .gallery-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* latar media saat loading / background lembut */
+        .card img, .card video {
+            background: #eef2f8;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎨 My Media Gallery</h1>
+        <p>Koleksi foto, video, dan alunan musik favorit</p>
+    </header>
+
+    <main class="container">
+        <!-- Bagian Foto: Ukuran frame menyesuaikan asli gambar (height:auto, width:100%) -->
+        <section class="gallery-section">
+            <h2>📸 Foto · Favorit saya</h2>
+            <div class="grid">
+                <div class="card">
+                    <!-- Gambar landscape (400x300) dari picsum -> rasio 4:3, tampil utuh -->
+                    <img src="1.jpg">
+                    <p></p>
+                    
+                </div>
+                <div class="card">
+                    <!-- Gambar dengan rasio persegi hampir / 400x300 tetap ditampilkan utuh tanpa crop -->
+                    <img src="2.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="3.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="4.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="5.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="6.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="7.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="8.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="9.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="10.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="11.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="12.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="13.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="14.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="15.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="16.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="17.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="18.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="19.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="20.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="21.jpg">
+                    <p></p>
+                </div>
+                <div class="card">
+                    <!-- Landscape elegan -->
+                    <img src="22.jpg">
+                    <p></p>
+                </div>
+            </div>
+            
+        </section>
+
+        <hr>
+
+        <!-- Bagian Video: menggunakan tag <video> dan mempertahankan rasio asli dari file video -->
+        <section class="gallery-section">
+            <h2>🎬 Video · favorit saya</h2>
+            <div class="grid">
+                <div class="card">
+                    <video controls preload="metadata">
+                        <source src="clipone.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung tag video.
+                    </video>
+                    <p>🎥 </p>
+                </div>
+                <div class="card">
+                    <video controls preload="metadata">
+                        <source src="clipone.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung tag video.
+                    </source></video>
+                    <p>🪁</p>
+                </div>
+                <div class="card">
+                    <!-- Tambahan video alternatif dengan rasio berbeda sebagai demonstrasi -->
+                    <video controls preload="metadata" poster="https://picsum.photos/id/169/400/300">
+                        <source src="VID_20250530_141739.mp4" type="video/mp4">
+                        <source src="httpsnteractive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+                        Video tidak dapat diputar, tetapi perhatikan frame menyesuaikan rasio.
+                    </video>
+                    <p>🌸</p>
+                </div>
+            </div>
+            
+        </section>
+
+        <hr>
+
+        <!-- ★ FITUR MUSIK ★ tetap santai dan kontrol penuh -->
+        <section class="music-section">
+            <div class="music-card">
+                <div class="music-header">
+                    <div class="music-icon">🎧🎶</div>
+                    <h3>Music Favorit Mu · Ada disini</h3>
+                    <span class="badge">Now Playing</span>
+                </div>
+                <div class="music-player-area">
+                    <!-- Audio dengan kontrol bawaan dari sumber legal -->
+                    <audio controls preload="metadata">
+                        <source src="gata only.mp3" type="audio/mpeg">
+                        Browser Anda tidak mendukung pemutar audio.
+                    </audio>
+                    <div class="music-info">
+                        <div class="track-name">
+                            <span>🎵</span> <strong>SoundHelix - Inspirational Acoustic</strong>
+                        </div>
+                        <div class="track-name">
+                            <span>⏱️</span> 3 menit 40 detik · Instrumental
+                        </div>
+                    </div>
+                    <div class="footer-note">
+                        💡 Klik tombol play untuk iringan musik saat menjelajahi galeri. Volume dan pause bisa diatur.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+       
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Dibuat oleh 4Yourdenzz </p>
+        <p style="margin-top: 0.5rem; font-size: 0.7rem;">Media support | Foto rasio asli · Video tanpa crop · Audio player</p>
+    </footer>
+</body>
+</html>
